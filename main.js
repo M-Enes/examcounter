@@ -1,36 +1,93 @@
 var examslist = document.getElementById('examslist')
 
-var exams = [
-    { name: 'Physics 2', date: new Date(2025, 2, 18, 17, 0, 0) },
-    { name: 'Calculus 2', date: new Date(2025, 2, 20, 17, 0, 0) },
-    { name: 'Programming Languages', date: new Date(2025, 2, 20, 13, 0, 0) },
-    { name: 'Data Structures', date: new Date(2025, 2, 24, 11, 0, 0) },
-]
+var exams = []
 
-function createExamList(exams) {
+function createExamList() {
     exams.forEach(exam => {
         var li = document.createElement('li')
-        var seconds_left = (((exam.date - new Date()) / 1000) % 60).toFixed(0)
-        var minutes_left = (((exam.date - new Date()) / 60000) % 60).toFixed(0)
-        var hours_left = ((exam.date - new Date()) / 3600000).toFixed(0)
+        var seconds_left = Math.floor(((exam.date - new Date()) / 1000) % 60)
+        var minutes_left = Math.floor(((exam.date - new Date()) / 60000) % 60)
+        var hours_left = Math.floor((exam.date - new Date()) / 3600000)
+        li.className = 'examElement active'
         if (exam.date < new Date()) {
             minutes_left = hours_left = 0;
+            li.className = 'examElement past'
         }
-        li.textContent = exam.name + ' - Time left: ' + hours_left + ' hours - ' + minutes_left + ' minutes - '+ seconds_left + ' seconds - ' + exam.date.toLocaleString()
-        li.style.color = exam.date < new Date() ? 'gray' : 'black'
-        li.style.fontWeight = exam.date < new Date() ? 'normal' : 'bold'
-        li.style.textDecoration = exam.date < new Date() ? 'line-through' : 'none'
-        li.style.fontSize = exam.date < new Date() ? '1em' : '2.5em'
-    
+
+        var date = exam.date.toLocaleString().split('/')[1] + '/' + exam.date.toLocaleString().split('/')[0] + '/' + exam.date.toLocaleString().split('/')[2]
+
+        li.textContent = exam.name + ' - Time left: ' + hours_left + ' hours - ' + minutes_left + ' minutes - ' + seconds_left + ' seconds - ' + date
+        li.addEventListener('click', function () {
+            promptForRemoval(exam.name)
+        });
+
         examslist.appendChild(li)
     })
 }
 
-exams.sort((a, b) => a.date - b.date)
-createExamList(exams)
+function saveExams() {
+    exams.sort((a, b) => a.date - b.date)
+    localStorage.setItem('exams', JSON.stringify(exams))
+}
 
-setInterval(() => {
+function loadExams() {
+    exams = JSON.parse(localStorage.getItem('exams'))
+    exams.forEach(exam => {
+        exam.date = new Date(Date.parse(exam.date))
+    })
+}
+
+function addExam() {
+    var name = document.getElementById('examname').value
+    var date = document.getElementById('examdate').value
+    date = date.split('/')
+    date = date.map((date) => parseInt(date))
+
+    var time = document.getElementById('examtime').value
+    var hours = parseInt(time.split(':')[0])
+    var minutes = parseInt(time.split(':')[1])
+    hours = (time.split(' ')[1] == 'pm') ? hours + 12 : hours
+
+    date = new Date(date[2], date[1] - 1, date[0], hours, minutes, 0)
+    exams.push({ name: name, date: date })
+    saveExams()
+    updateExams()
+}
+
+
+function promptForRemoval(examName) {
+    var remove = confirm("Do you want to remove " + examName + " from the list?");
+    if (remove) {
+        removeExam(examName);
+    }
+}
+
+
+function removeExam(examName) {
+
+    exams.forEach((exam, index) => {
+        if (exam.name === examName) {
+            exams.splice(index, 1);
+        }
+    })
+    saveExams();
+    updateExams();
+}
+
+function updateExams() {
     examslist.innerHTML = ''
     createExamList(exams)
-}, 5000)
+}
 
+function main() {
+
+    loadExams()
+    createExamList()
+
+    setInterval(() => {
+        updateExams()
+    }, 5000)
+}
+
+
+main()
