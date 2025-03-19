@@ -51,6 +51,7 @@ function addExam() {
     var hours = parseInt(time.split(':')[0])
     var minutes = parseInt(time.split(':')[1])
     hours = (time.split(' ')[1] == 'pm') ? hours + 12 : hours
+    hours = (hours == 12 || hours == 24) ? hours - 12 : hours
 
     date = new Date(date[2], date[1] - 1, date[0], hours, minutes, 0)
     exams.push({ name: name, date: date })
