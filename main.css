@@ -1,0 +1,33 @@
+.examElement.past {
+    color: gray;
+    font-weight: normal;
+    text-decoration: line-through;
+    font-size: 1em;
+}
+
+.examElement.active {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 2.5em;
+}
+
+@media (max-width: 768px) {
+    .examElement.past {
+        font-size: 0.8em;
+    }
+
+    .examElement.active {
+        font-size: 2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .examElement.past {
+        font-size: 0.6em;
+    }
+
+    .examElement.active {
+        font-size: 1.5em;
+    }
+}
