@@ -32,6 +32,10 @@ function saveExams() {
 
 function loadExams() {
     exams = JSON.parse(localStorage.getItem('exams'))
+    if (exams == null) {
+        exams = []
+        return
+    }
     exams.forEach(exam => {
         exam.date = new Date(Date.parse(exam.date))
     })
