@@ -57,6 +57,11 @@ function addExam() {
 
     date = new Date(date[2], date[1] - 1, date[0], hours, minutes, 0)
     exams.push({ name: name, date: date })
+
+    document.getElementById('examname').value = ''
+    document.getElementById('examdate').value = ''
+    document.getElementById('examtime').value = ''
+
     saveExams()
     updateExams()
 }
