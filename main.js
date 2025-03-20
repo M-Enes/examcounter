@@ -14,7 +14,7 @@ function createExamList() {
             li.className = 'examElement past'
         }
 
-        var date = exam.date.toLocaleString().split('/')[1] + '/' + exam.date.toLocaleString().split('/')[0] + '/' + exam.date.toLocaleString().split('/')[2]
+        var date = exam.date.toLocaleDateString() + ' ' + exam.date.toLocaleTimeString()
 
         li.textContent = exam.name + ' - Time left: ' + hours_left + ' hours - ' + minutes_left + ' minutes - ' + seconds_left + ' seconds - ' + date
         li.addEventListener('click', function () {
