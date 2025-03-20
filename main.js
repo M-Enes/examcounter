@@ -5,13 +5,15 @@ var exams = []
 function createExamList() {
     exams.forEach(exam => {
         var li = document.createElement('li')
-        var seconds_left = Math.floor(((exam.date - new Date()) / 1000) % 60)
-        var minutes_left = Math.floor(((exam.date - new Date()) / 60000) % 60)
-        var hours_left = Math.floor((exam.date - new Date()) / 3600000)
-        li.className = 'examElement active'
+
         if (exam.date < new Date()) {
-            minutes_left = hours_left = 0;
+            minutes_left = hours_left = seconds_left = 0;
             li.className = 'examElement past'
+        } else {
+            var seconds_left = Math.floor(((exam.date - new Date()) / 1000) % 60)
+            var minutes_left = Math.floor(((exam.date - new Date()) / 60000) % 60)
+            var hours_left = Math.floor((exam.date - new Date()) / 3600000)
+            li.className = 'examElement active'
         }
 
         var date = exam.date.toLocaleDateString() + ' ' + exam.date.toLocaleTimeString()
